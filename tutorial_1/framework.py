@@ -12,6 +12,7 @@ DISPLAY_HEIGHT = 600
 FPS = 60
 clock = pygame.time.Clock()
 BLOCK_SIZE = 10
+APPLE_THICKNESS = 30
 
 # INITIALIZATION
 pygame.init()
@@ -75,7 +76,7 @@ def gameLoop():
         lead_y += lead_y_change
 
         gameDisplay.fill(WHITE)
-        pygame.draw.rect(gameDisplay, RED, [rand_apple_x, rand_apple_y, BLOCK_SIZE, BLOCK_SIZE])
+        pygame.draw.rect(gameDisplay, RED, [rand_apple_x, rand_apple_y, APPLE_THICKNESS, APPLE_THICKNESS])
         
         snake_head = []
         snake_head.append(lead_x)
@@ -88,12 +89,15 @@ def gameLoop():
                 gameOver = True
         
         snake(snake_list)
+
         pygame.display.update()
-        if lead_x == rand_apple_x and lead_y == rand_apple_y:
-            print("nom")
-            rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE)/10.0) * 10.0
-            rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)/10.0) * 10.0
-            snake_length += 1
+
+
+        if lead_x >= rand_apple_x and lead_x <= rand_apple_x + APPLE_THICKNESS - BLOCK_SIZE:
+            if lead_y >= rand_apple_y and lead_y <= rand_apple_y + APPLE_THICKNESS - BLOCK_SIZE:
+                rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE)/10.0) * 10.0
+                rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)/10.0) * 10.0
+                snake_length += 1
 
 
         clock.tick(FPS)
