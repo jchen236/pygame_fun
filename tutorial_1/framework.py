@@ -24,9 +24,13 @@ def snake(snake_list):
     for xy in snake_list:
         pygame.draw.rect(gameDisplay, GREEN, [xy[0], xy[1], BLOCK_SIZE, BLOCK_SIZE])
 
+def text_objects(text, color):
+    textSurface = font.render(text, True, color)
+    return textSurface, textSurface.get_rect()
+
 def message_to_screen(msg, color):
     screen_text = font.render(msg, True, color)
-    gameDisplay.blit(screen_text, [DISPLAY_WIDTH / 2, DISPLAY_WIDTH / 2])
+    gameDisplay.blit(screen_text, [DISPLAY_WIDTH/2 - screen_text.get_width()/2, DISPLAY_HEIGHT/2 - screen_text.get_height()/2])
 
 def gameLoop():
     lead_x = DISPLAY_WIDTH / 2
