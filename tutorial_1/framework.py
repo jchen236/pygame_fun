@@ -27,8 +27,8 @@ def gameLoop():
     lead_y = DISPLAY_HEIGHT / 2
     lead_x_change = 0
     lead_y_change = 0
-    rand_apple_x = random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE)
-    rand_apple_y = random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)
+    rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE)/10.0) * 10.0
+    rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)/10.0) * 10.0
     gameExit = False
     gameOver = False
     while not gameExit:
@@ -73,6 +73,10 @@ def gameLoop():
         pygame.draw.rect(gameDisplay, RED, [rand_apple_x, rand_apple_y, BLOCK_SIZE, BLOCK_SIZE])
         pygame.draw.rect(gameDisplay, BLACK, [lead_x, lead_y, BLOCK_SIZE, BLOCK_SIZE])
         pygame.display.update()
+        if lead_x == rand_apple_x and lead_y = rand_apple_y:
+            print("nom")
+
+
         clock.tick(FPS)
             #print(event)
     pygame.quit()
