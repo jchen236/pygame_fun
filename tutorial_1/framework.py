@@ -96,11 +96,11 @@ def gameLoop():
         pygame.display.update()
 
 
-        if lead_x >= rand_apple_x and lead_x <= rand_apple_x + APPLE_THICKNESS - BLOCK_SIZE:
-            if lead_y >= rand_apple_y and lead_y <= rand_apple_y + APPLE_THICKNESS - BLOCK_SIZE:
-                rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE))#/10.0) * 10.0
-                rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE))#/10.0) * 10.0
-                snake_length += 1
+        if lead_x > rand_apple_x - BLOCK_SIZE and lead_x < rand_apple_x + APPLE_THICKNESS and lead_y > rand_apple_y - BLOCK_SIZE and lead_y < rand_apple_y + APPLE_THICKNESS:
+            rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE))
+            rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE))
+            snake_length += 1
+
 
 
         clock.tick(FPS)
