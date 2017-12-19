@@ -1,22 +1,27 @@
 import pygame
 import time
 import random
-pygame.init()
 
+# CONSTANTS
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED =  (255, 0, 0)
+GREEN = (0, 155, 0)
 DISPLAY_WIDTH = 800
 DISPLAY_HEIGHT = 600
-
-gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
-pygame.display.set_caption("Snake Game")
-
 FPS = 60
 clock = pygame.time.Clock()
 BLOCK_SIZE = 10
 
+# INITIALIZATION
+pygame.init()
+gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
+pygame.display.set_caption("Snake Game")
 font = pygame.font.SysFont(None, 25)
+
+def snake(snake_list):
+    for xy in snake_list:
+        pygame.draw.rect(gameDisplay, GREEN, [xy[0], xy[1], BLOCK_SIZE, BLOCK_SIZE])
 
 def message_to_screen(msg, color):
     screen_text = font.render(msg, True, color)
@@ -71,15 +76,25 @@ def gameLoop():
 
         gameDisplay.fill(WHITE)
         pygame.draw.rect(gameDisplay, RED, [rand_apple_x, rand_apple_y, BLOCK_SIZE, BLOCK_SIZE])
-        pygame.draw.rect(gameDisplay, BLACK, [lead_x, lead_y, BLOCK_SIZE, BLOCK_SIZE])
+        snake_list = []
+        snake_head = []
+        snake_head.append(lead_x)
+        snake_head.append(lead_y)
+        snake_list.append(snake_head)
+
+        snake(snake_list)
         pygame.display.update()
-        if lead_x == rand_apple_x and lead_y = rand_apple_y:
+        if lead_x == rand_apple_x and lead_y == rand_apple_y:
             print("nom")
+            rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE)/10.0) * 10.0
+            rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)/10.0) * 10.0
 
 
         clock.tick(FPS)
             #print(event)
     pygame.quit()
     quit()
+
+
 
 gameLoop()
