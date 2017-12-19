@@ -33,8 +33,8 @@ def gameLoop():
     lead_y = DISPLAY_HEIGHT / 2
     lead_x_change = 0
     lead_y_change = 0
-    rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE)/10.0) * 10.0
-    rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)/10.0) * 10.0
+    rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))#/10.0) * 10.0
+    rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - APPLE_THICKNESS))#/10.0) * 10.0
     gameExit = False
     gameOver = False
     snake_list = []
@@ -46,6 +46,9 @@ def gameLoop():
             message_to_screen("Game over, press C to play again or Q to quit", RED)
             pygame.display.update()
             for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameOver = False
+                    gameExit = True
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         gameExit = True
@@ -95,8 +98,8 @@ def gameLoop():
 
         if lead_x >= rand_apple_x and lead_x <= rand_apple_x + APPLE_THICKNESS - BLOCK_SIZE:
             if lead_y >= rand_apple_y and lead_y <= rand_apple_y + APPLE_THICKNESS - BLOCK_SIZE:
-                rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE)/10.0) * 10.0
-                rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)/10.0) * 10.0
+                rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE))#/10.0) * 10.0
+                rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE))#/10.0) * 10.0
                 snake_length += 1
 
 
