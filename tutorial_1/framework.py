@@ -36,6 +36,9 @@ def gameLoop():
     rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)/10.0) * 10.0
     gameExit = False
     gameOver = False
+    snake_list = []
+    snake_length = 1
+
     while not gameExit:
         while gameOver == True:
             gameDisplay.fill(WHITE)
@@ -66,9 +69,6 @@ def gameLoop():
                     lead_y_change = BLOCK_SIZE
                     lead_x_change = 0
 
-            # if event.type == pygame.KEYUP:
-            #     if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-            #         lead_x_change = 0
         if lead_x >= DISPLAY_WIDTH or lead_x < 0 or lead_y >= DISPLAY_HEIGHT or lead_y < 0:
             gameOver = True
         lead_x += lead_x_change
@@ -76,18 +76,24 @@ def gameLoop():
 
         gameDisplay.fill(WHITE)
         pygame.draw.rect(gameDisplay, RED, [rand_apple_x, rand_apple_y, BLOCK_SIZE, BLOCK_SIZE])
-        snake_list = []
+        
         snake_head = []
         snake_head.append(lead_x)
         snake_head.append(lead_y)
         snake_list.append(snake_head)
-
+        if len(snake_list) > snake_length:
+            del snake_list[0]
+        for segment in snake_list[:-1]:
+            if segment == snake_head:
+                gameOver = True
+        
         snake(snake_list)
         pygame.display.update()
         if lead_x == rand_apple_x and lead_y == rand_apple_y:
             print("nom")
             rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE)/10.0) * 10.0
             rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE)/10.0) * 10.0
+            snake_length += 1
 
 
         clock.tick(FPS)
