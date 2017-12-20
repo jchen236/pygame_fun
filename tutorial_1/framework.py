@@ -11,7 +11,7 @@ DISPLAY_WIDTH = 800
 DISPLAY_HEIGHT = 600
 FPS = 60
 clock = pygame.time.Clock()
-BLOCK_SIZE = 10
+BLOCK_SIZE = 20
 APPLE_THICKNESS = 30
 
 
@@ -20,11 +20,40 @@ pygame.init()
 gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("Snake Game")
 
-img = pygame.image.load('./snakehead2.png')
+icon = pygame.image.load('./apple.png')
+pygame.display.set_icon(icon)
+
+img = pygame.image.load('./snakehead3.png')
+apple_img = pygame.image.load('./apple.png')
 small_font = pygame.font.SysFont("comicsansms", 25)
 med_font = pygame.font.SysFont("comicsansms", 50)
 large_font = pygame.font.SysFont("comicsansms", 75)
 direction = "right"
+
+def game_intro():
+    intro = True
+    while intro:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    intro = False
+                elif event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
+        
+        gameDisplay.fill(WHITE)
+        message_to_screen("Welcome to Slither", GREEN, -100, size="large")
+        message_to_screen("The objective of the game is to eat red apple", BLACK, -30)
+        message_to_screen("The more apples you eat, the longer you get", BLACK, 10)
+        message_to_screen("If you run into yourself or the eges, you die!", BLACK, 50)
+        message_to_screen("Press C to play or Q to quit", BLACK, 180)
+        pygame.display.update()
+        clock.tick(FPS/2)
+
 
 def snake(snake_list):
     if direction == "right":
@@ -55,12 +84,13 @@ def message_to_screen(msg, color, y_displace=0, size = "small"):
     gameDisplay.blit(screen_text, [DISPLAY_WIDTH/2 - screen_text.get_width()/2, DISPLAY_HEIGHT/2 - screen_text.get_height()/2 + y_displace])
 
 def gameLoop():
+    print("hello")
     global direction
     gameExit = False
     gameOver = False
     lead_x = DISPLAY_WIDTH / 2
     lead_y = DISPLAY_HEIGHT / 2
-    lead_x_change = 10
+    lead_x_change = BLOCK_SIZE/2
     lead_y_change = 0
     rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))#/10.0) * 10.0
     rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - APPLE_THICKNESS))#/10.0) * 10.0
@@ -92,19 +122,19 @@ def gameLoop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     direction = "left"
-                    lead_x_change = -BLOCK_SIZE
+                    lead_x_change = -BLOCK_SIZE/2
                     lead_y_change = 0
                 elif event.key == pygame.K_RIGHT:
                     direction = "right"
-                    lead_x_change = BLOCK_SIZE
+                    lead_x_change = BLOCK_SIZE/2
                     lead_y_change = 0
                 elif event.key == pygame.K_UP:
                     direction = "up"
-                    lead_y_change = -BLOCK_SIZE
+                    lead_y_change = -BLOCK_SIZE/2
                     lead_x_change = 0
                 elif event.key == pygame.K_DOWN:
                     direction = "down"
-                    lead_y_change = BLOCK_SIZE
+                    lead_y_change = BLOCK_SIZE/2
                     lead_x_change = 0
 
         if lead_x >= DISPLAY_WIDTH or lead_x < 0 or lead_y >= DISPLAY_HEIGHT or lead_y < 0:
@@ -113,8 +143,10 @@ def gameLoop():
         lead_y += lead_y_change
 
         gameDisplay.fill(WHITE)
-        pygame.draw.rect(gameDisplay, RED, [rand_apple_x, rand_apple_y, APPLE_THICKNESS, APPLE_THICKNESS])
-        
+
+        # Draw the apple
+        #pygame.draw.rect(gameDisplay, RED, [rand_apple_x, rand_apple_y, APPLE_THICKNESS, APPLE_THICKNESS])
+        gameDisplay.blit(apple_img, (rand_apple_x, rand_apple_y))
         snake_head = []
         snake_head.append(lead_x)
         snake_head.append(lead_y)
@@ -131,8 +163,8 @@ def gameLoop():
 
 
         if lead_x > rand_apple_x - BLOCK_SIZE and lead_x < rand_apple_x + APPLE_THICKNESS and lead_y > rand_apple_y - BLOCK_SIZE and lead_y < rand_apple_y + APPLE_THICKNESS:
-            rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE))
-            rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE))
+            rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))
+            rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - APPLE_THICKNESS))
             snake_length += 1
 
 
@@ -143,5 +175,5 @@ def gameLoop():
     quit()
 
 
-
+game_intro()
 gameLoop()
