@@ -50,13 +50,33 @@ def game_intro():
         message_to_screen("The objective of the game is to eat red apple", BLACK, -30)
         message_to_screen("The more apples you eat, the longer you get", BLACK, 10)
         message_to_screen("If you run into yourself or the eges, you die!", BLACK, 50)
-        message_to_screen("Press C to play or Q to quit", BLACK, 180)
+        message_to_screen("Press C to play, P to pause, or Q to quit", BLACK, 180)
         pygame.display.update()
-        clock.tick(FPS/2)
+        clock.tick(10)
 
 def score(score):
     text = small_font.render("Score: " + str(score), True, BLACK)
     gameDisplay.blit(text, [0,0])
+
+def pause():
+    paused = True
+
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_c:
+                    paused = False
+                elif event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
+        gameDisplay.fill(WHITE)
+        message_to_screen("Paused", BLACK, -100, size="large")
+        message_to_screen("Press C to continue or Q to quit", BLACK, 25)
+        pygame.display.update()
+        clock.tick(10)
 
 def rand_apple_gen():
     rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))#/10.0) * 10.0
@@ -143,6 +163,8 @@ def gameLoop():
                     direction = "down"
                     lead_y_change = BLOCK_SIZE/2
                     lead_x_change = 0
+                elif event.key == pygame.K_p:
+                    pause()
 
         if lead_x >= DISPLAY_WIDTH or lead_x < 0 or lead_y >= DISPLAY_HEIGHT or lead_y < 0:
             gameOver = True
