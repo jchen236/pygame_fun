@@ -14,6 +14,7 @@ clock = pygame.time.Clock()
 BLOCK_SIZE = 10
 APPLE_THICKNESS = 30
 
+
 # INITIALIZATION
 pygame.init()
 gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
@@ -21,10 +22,20 @@ pygame.display.set_caption("Snake Game")
 
 img = pygame.image.load('./snakehead2.png')
 font = pygame.font.SysFont(None, 25)
+direction = "right"
 
 def snake(snake_list):
+    if direction == "right":
+        head = pygame.transform.rotate(img, 270)
+    if direction == "left":
+        head = pygame.transform.rotate(img, 90)
+    if direction == "up":
+        head = img
+    if direction == "down":
+        head = pygame.transform.rotate(img, 180)
+    
 
-    gameDisplay.blit(img, (snake_list[-1][0], snake_list[-1][1]))
+    gameDisplay.blit(head, (snake_list[-1][0], snake_list[-1][1]))
     for xy in snake_list[:-1]:
         pygame.draw.rect(gameDisplay, GREEN, [xy[0], xy[1], BLOCK_SIZE, BLOCK_SIZE])
 
@@ -37,14 +48,16 @@ def message_to_screen(msg, color):
     gameDisplay.blit(screen_text, [DISPLAY_WIDTH/2 - screen_text.get_width()/2, DISPLAY_HEIGHT/2 - screen_text.get_height()/2])
 
 def gameLoop():
+    global direction
+    gameExit = False
+    gameOver = False
     lead_x = DISPLAY_WIDTH / 2
     lead_y = DISPLAY_HEIGHT / 2
-    lead_x_change = 0
+    lead_x_change = 10
     lead_y_change = 0
     rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))#/10.0) * 10.0
     rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - APPLE_THICKNESS))#/10.0) * 10.0
-    gameExit = False
-    gameOver = False
+
     snake_list = []
     snake_length = 1
 
@@ -69,15 +82,19 @@ def gameLoop():
                 gameExit = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
+                    direction = "left"
                     lead_x_change = -BLOCK_SIZE
                     lead_y_change = 0
                 elif event.key == pygame.K_RIGHT:
+                    direction = "right"
                     lead_x_change = BLOCK_SIZE
                     lead_y_change = 0
                 elif event.key == pygame.K_UP:
+                    direction = "up"
                     lead_y_change = -BLOCK_SIZE
                     lead_x_change = 0
                 elif event.key == pygame.K_DOWN:
+                    direction = "down"
                     lead_y_change = BLOCK_SIZE
                     lead_x_change = 0
 
