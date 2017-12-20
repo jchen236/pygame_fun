@@ -63,6 +63,9 @@ def score(score):
 
 def pause():
     paused = True
+    message_to_screen("Paused", BLACK, -100, size="large")
+    message_to_screen("Press C to continue or Q to quit", BLACK, 25)
+    pygame.display.update()
     while paused:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -74,10 +77,8 @@ def pause():
                 elif event.key == pygame.K_q:
                     pygame.quit()
                     quit()
-        gameDisplay.fill(WHITE)
-        message_to_screen("Paused", BLACK, -100, size="large")
-        message_to_screen("Press C to continue or Q to quit", BLACK, 25)
-        pygame.display.update()
+        # gameDisplay.fill(WHITE)
+        
         clock.tick(10)
 
 # Draws the apple
