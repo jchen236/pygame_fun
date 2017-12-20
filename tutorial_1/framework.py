@@ -18,10 +18,14 @@ APPLE_THICKNESS = 30
 pygame.init()
 gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("Snake Game")
+
+img = pygame.image.load('./snakehead2.png')
 font = pygame.font.SysFont(None, 25)
 
 def snake(snake_list):
-    for xy in snake_list:
+
+    gameDisplay.blit(img, (snake_list[-1][0], snake_list[-1][1]))
+    for xy in snake_list[:-1]:
         pygame.draw.rect(gameDisplay, GREEN, [xy[0], xy[1], BLOCK_SIZE, BLOCK_SIZE])
 
 def text_objects(text, color):
