@@ -54,6 +54,14 @@ def game_intro():
         pygame.display.update()
         clock.tick(FPS/2)
 
+def score(score):
+    text = small_font.render("Score: " + str(score), True, BLACK)
+    gameDisplay.blit(text, [0,0])
+
+def rand_apple_gen():
+    rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))#/10.0) * 10.0
+    rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - APPLE_THICKNESS))#/10.0) * 10.0
+    return rand_apple_x, rand_apple_y
 
 def snake(snake_list):
     if direction == "right":
@@ -92,8 +100,7 @@ def gameLoop():
     lead_y = DISPLAY_HEIGHT / 2
     lead_x_change = BLOCK_SIZE/2
     lead_y_change = 0
-    rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))#/10.0) * 10.0
-    rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - APPLE_THICKNESS))#/10.0) * 10.0
+    rand_apple_x, rand_apple_y = rand_apple_gen()
 
     snake_list = []
     snake_length = 1
@@ -158,13 +165,12 @@ def gameLoop():
                 gameOver = True
         
         snake(snake_list)
-
+        score(snake_length - 1)
         pygame.display.update()
 
 
         if lead_x > rand_apple_x - BLOCK_SIZE and lead_x < rand_apple_x + APPLE_THICKNESS and lead_y > rand_apple_y - BLOCK_SIZE and lead_y < rand_apple_y + APPLE_THICKNESS:
-            rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))
-            rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - APPLE_THICKNESS))
+            rand_apple_x, rand_apple_y = rand_apple_gen()
             snake_length += 1
 
 
