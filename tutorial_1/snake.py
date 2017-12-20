@@ -20,16 +20,19 @@ pygame.init()
 gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("Snake Game")
 
+# Graphics and Fonts
 icon = pygame.image.load('./apple.png')
 pygame.display.set_icon(icon)
-
 img = pygame.image.load('./snakehead3.png')
 apple_img = pygame.image.load('./apple.png')
 small_font = pygame.font.SysFont("comicsansms", 25)
 med_font = pygame.font.SysFont("comicsansms", 50)
 large_font = pygame.font.SysFont("comicsansms", 75)
+
+# Initialize Direction
 direction = "right"
 
+# Start Screen
 def game_intro():
     intro = True
     while intro:
@@ -60,7 +63,6 @@ def score(score):
 
 def pause():
     paused = True
-
     while paused:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -78,11 +80,13 @@ def pause():
         pygame.display.update()
         clock.tick(10)
 
+# Draws the apple
 def rand_apple_gen():
     rand_apple_x = round(random.randrange(0, DISPLAY_WIDTH - APPLE_THICKNESS))#/10.0) * 10.0
     rand_apple_y = round(random.randrange(0, DISPLAY_HEIGHT - APPLE_THICKNESS))#/10.0) * 10.0
     return rand_apple_x, rand_apple_y
 
+# Draws the snake
 def snake(snake_list):
     if direction == "right":
         head = pygame.transform.rotate(img, 270)
@@ -93,15 +97,17 @@ def snake(snake_list):
     if direction == "down":
         head = pygame.transform.rotate(img, 180)
     
-
     gameDisplay.blit(head, (snake_list[-1][0], snake_list[-1][1]))
+
     for xy in snake_list[:-1]:
         pygame.draw.rect(gameDisplay, GREEN, [xy[0], xy[1], BLOCK_SIZE, BLOCK_SIZE])
 
+# Helper for drawing text to screen
 def text_objects(text, color):
     textSurface = font.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
+# Draws text to screen
 def message_to_screen(msg, color, y_displace=0, size = "small"):
     if size == "small":
         screen_text = small_font.render(msg, True, color)
@@ -111,21 +117,23 @@ def message_to_screen(msg, color, y_displace=0, size = "small"):
         screen_text = large_font.render(msg, True, color)
     gameDisplay.blit(screen_text, [DISPLAY_WIDTH/2 - screen_text.get_width()/2, DISPLAY_HEIGHT/2 - screen_text.get_height()/2 + y_displace])
 
+# Main game loop
 def gameLoop():
-    print("hello")
     global direction
     gameExit = False
     gameOver = False
+
     lead_x = DISPLAY_WIDTH / 2
     lead_y = DISPLAY_HEIGHT / 2
     lead_x_change = BLOCK_SIZE/2
     lead_y_change = 0
-    rand_apple_x, rand_apple_y = rand_apple_gen()
 
+    rand_apple_x, rand_apple_y = rand_apple_gen()
     snake_list = []
     snake_length = 1
 
     while not gameExit:
+        # Game over logic. Quit or start again.
         while gameOver == True:
             gameDisplay.fill(WHITE)
             message_to_screen("Game Over", RED, -50, size = "large")
@@ -143,6 +151,7 @@ def gameLoop():
                         direction = "right"
                         gameLoop()
         
+        # Main game logic
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameExit = True
@@ -165,7 +174,7 @@ def gameLoop():
                     lead_x_change = 0
                 elif event.key == pygame.K_p:
                     pause()
-
+        # Off screen detection
         if lead_x >= DISPLAY_WIDTH or lead_x < 0 or lead_y >= DISPLAY_HEIGHT or lead_y < 0:
             gameOver = True
         lead_x += lead_x_change
@@ -174,14 +183,16 @@ def gameLoop():
         gameDisplay.fill(WHITE)
 
         # Draw the apple
-        #pygame.draw.rect(gameDisplay, RED, [rand_apple_x, rand_apple_y, APPLE_THICKNESS, APPLE_THICKNESS])
         gameDisplay.blit(apple_img, (rand_apple_x, rand_apple_y))
+
+        # Change the snake
         snake_head = []
         snake_head.append(lead_x)
         snake_head.append(lead_y)
         snake_list.append(snake_head)
         if len(snake_list) > snake_length:
             del snake_list[0]
+        # Detects if snake runs into itself
         for segment in snake_list[:-1]:
             if segment == snake_head:
                 gameOver = True
@@ -190,18 +201,15 @@ def gameLoop():
         score(snake_length - 1)
         pygame.display.update()
 
-
+        # Apple collision
         if lead_x > rand_apple_x - BLOCK_SIZE and lead_x < rand_apple_x + APPLE_THICKNESS and lead_y > rand_apple_y - BLOCK_SIZE and lead_y < rand_apple_y + APPLE_THICKNESS:
             rand_apple_x, rand_apple_y = rand_apple_gen()
             snake_length += 1
 
-
-
         clock.tick(FPS)
-            #print(event)
+
     pygame.quit()
     quit()
-
 
 game_intro()
 gameLoop()
