@@ -135,11 +135,12 @@ def gameLoop():
 
     while not gameExit:
         # Game over logic. Quit or start again.
-        while gameOver == True:
-            gameDisplay.fill(WHITE)
+
+        if gameOver == True:
             message_to_screen("Game Over", RED, -50, size = "large")
             message_to_screen("Press C to play again or Q to quit", BLACK, 50, size = "med")
             pygame.display.update()
+        while gameOver == True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     gameOver = False
