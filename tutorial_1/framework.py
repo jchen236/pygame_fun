@@ -21,7 +21,9 @@ gameDisplay = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
 pygame.display.set_caption("Snake Game")
 
 img = pygame.image.load('./snakehead2.png')
-font = pygame.font.SysFont(None, 25)
+small_font = pygame.font.SysFont("comicsansms", 25)
+med_font = pygame.font.SysFont("comicsansms", 50)
+large_font = pygame.font.SysFont("comicsansms", 75)
 direction = "right"
 
 def snake(snake_list):
@@ -43,9 +45,14 @@ def text_objects(text, color):
     textSurface = font.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
-def message_to_screen(msg, color):
-    screen_text = font.render(msg, True, color)
-    gameDisplay.blit(screen_text, [DISPLAY_WIDTH/2 - screen_text.get_width()/2, DISPLAY_HEIGHT/2 - screen_text.get_height()/2])
+def message_to_screen(msg, color, y_displace=0, size = "small"):
+    if size == "small":
+        screen_text = small_font.render(msg, True, color)
+    elif size == "med":
+        screen_text = med_font.render(msg, True, color)
+    elif size == "large":
+        screen_text = large_font.render(msg, True, color)
+    gameDisplay.blit(screen_text, [DISPLAY_WIDTH/2 - screen_text.get_width()/2, DISPLAY_HEIGHT/2 - screen_text.get_height()/2 + y_displace])
 
 def gameLoop():
     global direction
@@ -64,7 +71,8 @@ def gameLoop():
     while not gameExit:
         while gameOver == True:
             gameDisplay.fill(WHITE)
-            message_to_screen("Game over, press C to play again or Q to quit", RED)
+            message_to_screen("Game Over", RED, -50, size = "large")
+            message_to_screen("Press C to play again or Q to quit", BLACK, 50, size = "med")
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -75,6 +83,7 @@ def gameLoop():
                         gameExit = True
                         gameOver = False
                     if event.key == pygame.K_c:
+                        direction = "right"
                         gameLoop()
         
         for event in pygame.event.get():
