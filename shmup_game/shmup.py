@@ -4,7 +4,6 @@ import os
 
 img_dir = os.path.dirname("/Users/jimmychen/Desktop/Cornell_2017-2018_Fall/WinterWork/pygames/shmup_game/img/")
 
-
 WIDTH = 480
 HEIGHT = 600
 FPS = 60
@@ -23,6 +22,15 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Shmup")
 clock = pygame.time.Clock()
+
+font_name = pygame.font.match_font('arial')
+def draw_text(surf, text, size, x, y):
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, WHITE)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x, y)
+    surf.blit(text_surface, text_rect)
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -83,8 +91,6 @@ class Mob(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
             self.rect.center = old_center 
 
-
-
     def update(self):
         self.rotate()
         self.rect.y += self.speedy
@@ -126,8 +132,6 @@ for img in meteor_list:
     meteor_images.append(pygame.image.load(os.path.join(img_dir, img)).convert())
 
 
-
-
 all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
@@ -138,8 +142,10 @@ for i in range(MOB_NUMBER):
     m = Mob()
     all_sprites.add(m)
     mobs.add(m)
- 
+
+score = 0
 running = True
+
 while running:
     # keep loop running at right FPS
     clock.tick(FPS)
@@ -156,8 +162,9 @@ while running:
     all_sprites.update()
 
     # Check to see if a bullet hit a mob
-    hits = pygame.sprite.groupcollide(bullets, mobs, True, True)
+    hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
     for hit in hits:
+        score += 50 - hit.radius
         m = Mob()
         all_sprites.add(m)
         mobs.add(m)
@@ -171,6 +178,7 @@ while running:
     screen.fill(BLACK)
     screen.blit(background, background_rect)
     all_sprites.draw(screen)
+    draw_text(screen, str(score), 18, WIDTH/2, 10)
 
     # Flip the display after drawing everything
     pygame.display.flip()
