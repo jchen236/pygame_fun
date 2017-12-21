@@ -16,6 +16,11 @@ gameDisplay.fill(BLUE)
 
 pix = pygame.PixelArray(gameDisplay)
 pix[10][10] = GREEN
+#Start point, end point, width
+pygame.draw.line(gameDisplay, RED, (200, 300), (500, 700), 5)
+
+# Start center, width
+pygame.draw.circle(gameDisplay, RED, (100, 50), 20)
 
 while True:
     for event in pygame.event.get():
