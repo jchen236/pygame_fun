@@ -4,6 +4,7 @@ import random
 WIDTH = 480
 HEIGHT = 600
 FPS = 60
+MOB_NUMBER = 10
 
 # Colors
 WHITE = (255, 255, 255)
@@ -87,7 +88,8 @@ mobs = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
-for i in range(8):
+
+for i in range(MOB_NUMBER):
     m = Mob()
     all_sprites.add(m)
     mobs.add(m)
@@ -107,6 +109,13 @@ while running:
     
     # Update
     all_sprites.update()
+
+    # Check to see if a bullet hit a mob
+    hits = pygame.sprite.groupcollide(bullets, mobs, True, True)
+    for hit in hits:
+        m = Mob()
+        all_sprites.add(m)
+        mobs.add(m)
 
     # Check to see if mob hit the player
     hits = pygame.sprite.spritecollide(player, mobs, False)
