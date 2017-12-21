@@ -59,9 +59,14 @@ class Mob(pygame.sprite.Sprite):
             self.speedy = random.randrange(1, 8)
 
 all_sprites = pygame.sprite.Group()
+mobs = pygame.sprite.Group()
 player = Player()
 all_sprites.add(player)
-
+for i in range(8):
+    m = Mob()
+    all_sprites.add(m)
+    mobs.add(m)
+ 
 running = True
 while running:
     # keep loop running at right FPS
