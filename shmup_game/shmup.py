@@ -27,13 +27,18 @@ pygame.display.set_caption("Shmup")
 clock = pygame.time.Clock()
 
 font_name = pygame.font.match_font('arial')
+
 def draw_text(surf, text, size, x, y):
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, WHITE)
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
-
+    
+def new_mob():
+    m = Mob()
+    all_sprites.add(m)
+    mobs.add(m)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -46,6 +51,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = WIDTH / 2
         self.rect.bottom = HEIGHT - 10
         self.speedx = 0
+        self.shield = 100
 
     def update(self):
         self.speedx = 0
@@ -154,9 +160,7 @@ player = Player()
 all_sprites.add(player)
 
 for i in range(MOB_NUMBER):
-    m = Mob()
-    all_sprites.add(m)
-    mobs.add(m)
+    new_mob()
 
 pygame.mixer.music.play(loops=-1)
 score = 0
@@ -182,14 +186,15 @@ while running:
     for hit in hits:
         score += 50 - hit.radius
         random.choice(explosion_sounds).play()
-        m = Mob()
-        all_sprites.add(m)
-        mobs.add(m)
+        new_mob()
 
     # Check to see if mob hit the player
-    hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
-    if hits:
-        running = False
+    hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
+    for hit in hits:
+        player.shield -= hit.radius * 2
+        new_mob()
+        if player.shield <= 0:
+            running = False
 
     # Draw
     screen.fill(BLACK)
