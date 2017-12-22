@@ -61,6 +61,21 @@ def draw_lives(surf, x, y, lives, img):
         img_rect.y = y
         surf.blit(img, img_rect)
 
+def show_game_over_screen():
+    screen.blit(background, background_rect)
+    draw_text(screen, "SHMUP", 64, WIDTH / 2, HEIGHT / 4 )
+    draw_text(screen, "Arrow keys move, Space to fire", 22, WIDTH / 2, HEIGHT / 2)
+    draw_text(screen, "Press a key to begin", 18, WIDTH / 2, HEIGHT * 3 / 4)
+    pygame.display.flip()
+    waiting = True
+    while waiting:
+        clock.tick(FPS / 2)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.KEYUP:
+                waiting = False
+    
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -229,7 +244,6 @@ class Explosion(pygame.sprite.Sprite):
                 self.rect = self.image.get_rect()
                 self.rect.center = center 
 
-
 # Load all game graphics
 background = pygame.image.load(os.path.join(img_dir, "starbg.png")).convert()
 background_rect = background.get_rect()
@@ -283,21 +297,25 @@ player_die_sound = pygame.mixer.Sound(os.path.join(snd_dir, 'rumble1.ogg'))
 pygame.mixer.music.load(os.path.join(snd_dir, 'Subdream-Space_Philately.ogg'))
 pygame.mixer.music.set_volume(0.1)
 
-all_sprites = pygame.sprite.Group()
-mobs = pygame.sprite.Group()
-bullets = pygame.sprite.Group()
-powerups = pygame.sprite.Group()
-player = Player()
-all_sprites.add(player)
-
-for i in range(MOB_NUMBER):
-    new_mob()
-
-pygame.mixer.music.play(loops=-1)
-score = 0
+game_over = True
 running = True
 
 while running:
+    if game_over:
+        show_game_over_screen()
+        game_over = False
+        all_sprites = pygame.sprite.Group()
+        mobs = pygame.sprite.Group()
+        bullets = pygame.sprite.Group()
+        powerups = pygame.sprite.Group()
+        player = Player()
+        all_sprites.add(player)
+
+        for i in range(MOB_NUMBER):
+            new_mob()
+
+        pygame.mixer.music.play(loops=-1)
+        score = 0
     # keep loop running at right FPS
     clock.tick(FPS)
     # Process input (events)
@@ -350,7 +368,7 @@ while running:
             player.powerup()
     
     if player.lives == 0 and not death_explosion.alive():
-        running = False
+        game_over = True
 
     # Draw
     screen.fill(BLACK)
