@@ -1,5 +1,6 @@
 # Background Music: Space Philately by Subdream - https://soundcloud.com/subdream/space-philately
 # Art from Kenney.nl
+# Tutorial from: https://www.youtube.com/channel/UCNaPQ5uLX5iIEHUCLmfAgKg
 import pygame
 import random
 import os
@@ -11,6 +12,7 @@ WIDTH = 480
 HEIGHT = 600
 FPS = 60
 MOB_NUMBER = 10
+POWERUP_TIME = 5000
 
 # Colors
 WHITE = (255, 255, 255)
@@ -19,6 +21,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+
 
 pygame.init()
 pygame.mixer.init()
@@ -75,8 +78,15 @@ class Player(pygame.sprite.Sprite):
         self.lives = 3
         self.hidden = False
         self.hide_timer = pygame.time.get_ticks()
+        self.power = 1
+        self.power_time = pygame.time.get_ticks()
 
     def update(self):
+        # timeout for powerups 
+        if self.power >= 2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
+            print('minus')
+            self.power -= 1
+            self.power_time = pygame.time.get_ticks()
         # unhide if hidden 
         if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
@@ -97,14 +107,29 @@ class Player(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
 
+    def powerup(self):
+        print("power up")
+        self.power += 1
+        self.power_time = pygame.time.get_ticks()
+         
     def shoot(self):
         now = pygame.time.get_ticks()
         if now - self.last_shot > self.shoot_delay:
             self.last_shot = now
-            bullet = Bullet(self.rect.centerx, self.rect.top)
-            all_sprites.add(bullet)
-            bullets.add(bullet)
-            shoot_sound.play()
+            if self.power == 1:
+                bullet = Bullet(self.rect.centerx, self.rect.top)
+                all_sprites.add(bullet)
+                bullets.add(bullet)
+                shoot_sound.play()
+            if self.power >= 2:
+                print("more than 2")
+                bullet1 = Bullet(self.rect.left, self.rect.centery)
+                bullet2 = Bullet(self.rect.right, self.rect.centery)
+                all_sprites.add(bullet1)
+                all_sprites.add(bullet2)
+                bullets.add(bullet1)
+                bullets.add(bullet2)
+                shoot_sound.play()
 
     def hide(self):
         # Hide the player temporarily
@@ -319,7 +344,8 @@ while running:
             if player.shield >= 100:
                 player.shield = 100
         elif hit.type == 'gun':
-            pass
+            print("um")
+            player.powerup()
     
     if player.lives == 0 and not death_explosion.alive():
         running = False
