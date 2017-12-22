@@ -84,7 +84,6 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         # timeout for powerups 
         if self.power >= 2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
-            print('minus')
             self.power -= 1
             self.power_time = pygame.time.get_ticks()
         # unhide if hidden 
@@ -108,7 +107,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.left = 0
 
     def powerup(self):
-        print("power up")
         self.power += 1
         self.power_time = pygame.time.get_ticks()
          
@@ -122,7 +120,6 @@ class Player(pygame.sprite.Sprite):
                 bullets.add(bullet)
                 shoot_sound.play()
             if self.power >= 2:
-                print("more than 2")
                 bullet1 = Bullet(self.rect.left, self.rect.centery)
                 bullet2 = Bullet(self.rect.right, self.rect.centery)
                 all_sprites.add(bullet1)
@@ -271,7 +268,11 @@ powerup_images['gun'] = pygame.image.load(os.path.join(img_dir, 'bolt_gold.png')
 
 #Load all game sounds
 shoot_sound = pygame.mixer.Sound(os.path.join(snd_dir, "laser_shoot.wav"))
+shield_sound = pygame.mixer.Sound(os.path.join(snd_dir, "pow4.wav"))
+power_sound = pygame.mixer.Sound(os.path.join(snd_dir, "pow5.wav"))
 shoot_sound.set_volume(0.1)
+shield_sound.set_volume(0.1)
+power_sound.set_volume(0.1)
 explosion_sounds = []
 for snd in ['expl.wav', 'expl2.wav']:
     sound = pygame.mixer.Sound(os.path.join(snd_dir, snd))
@@ -340,11 +341,12 @@ while running:
     hits = pygame.sprite.spritecollide(player, powerups, True)
     for hit in hits:
         if hit.type == 'shield':
-            player.shield += random.randrange(10, 20) 
+            player.shield += random.randrange(10, 20)
+            shield_sound.play()
             if player.shield >= 100:
                 player.shield = 100
         elif hit.type == 'gun':
-            print("um")
+            power_sound.play()
             player.powerup()
     
     if player.lives == 0 and not death_explosion.alive():
