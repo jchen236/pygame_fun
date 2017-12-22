@@ -1,8 +1,11 @@
+# Background Music: Space Philately by Subdream - https://soundcloud.com/subdream/space-philately
+# Art from Kenney.nl
 import pygame
 import random
 import os
 
 img_dir = os.path.dirname("/Users/jimmychen/Desktop/Cornell_2017-2018_Fall/WinterWork/pygames/shmup_game/img/")
+snd_dir = os.path.dirname("/Users/jimmychen/Desktop/Cornell_2017-2018_Fall/WinterWork/pygames/shmup_game/snd/")
 
 WIDTH = 480
 HEIGHT = 600
@@ -61,6 +64,7 @@ class Player(pygame.sprite.Sprite):
         bullet = Bullet(self.rect.centerx, self.rect.top)
         all_sprites.add(bullet)
         bullets.add(bullet)
+        shoot_sound.play()
 
 
 class Mob(pygame.sprite.Sprite):
@@ -131,6 +135,17 @@ meteor_list = ['meteorGrey_1.png', 'meteorGrey_2.png', 'meteorGrey_3.png',
 for img in meteor_list:
     meteor_images.append(pygame.image.load(os.path.join(img_dir, img)).convert())
 
+#Load all game sounds
+shoot_sound = pygame.mixer.Sound(os.path.join(snd_dir, "laser_shoot.wav"))
+shoot_sound.set_volume(0.1)
+explosion_sounds = []
+for snd in ['expl.wav', 'expl2.wav']:
+    sound = pygame.mixer.Sound(os.path.join(snd_dir, snd))
+    sound.set_volume(0.1)
+    explosion_sounds.append(sound)
+
+pygame.mixer.music.load(os.path.join(snd_dir, 'Subdream-Space_Philately.ogg'))
+pygame.mixer.music.set_volume(0.1)
 
 all_sprites = pygame.sprite.Group()
 mobs = pygame.sprite.Group()
@@ -143,6 +158,7 @@ for i in range(MOB_NUMBER):
     all_sprites.add(m)
     mobs.add(m)
 
+pygame.mixer.music.play(loops=-1)
 score = 0
 running = True
 
@@ -165,6 +181,7 @@ while running:
     hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
     for hit in hits:
         score += 50 - hit.radius
+        random.choice(explosion_sounds).play()
         m = Mob()
         all_sprites.add(m)
         mobs.add(m)
