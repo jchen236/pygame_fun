@@ -82,7 +82,7 @@ class Game:
                     self.player.jump()
 
     def draw(self):
-        self.screen.fill(BLACK)
+        self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
         self.draw_text(str(self.score), 22, WHITE, WIDTH / 2, 15)
         pg.display.flip()
@@ -95,11 +95,33 @@ class Game:
         self.screen.blit(text_surface, text_rect)
 
     def show_start_screen(self):
-        pass
+        self.screen.fill(BGCOLOR)
+        self.draw_text(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        self.draw_text("Arrows to move and space to jump", 22, WHITE, WIDTH / 2, HEIGHT / 2)
+        self.draw_text("Press a key to play", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        pg.display.flip()
+        self.wait_for_key()
 
     def show_game_over_screen(self):
-        pass
+        if not self.running:
+            return
+        self.screen.fill(BGCOLOR)
+        self.draw_text("GAME OVER", 48, WHITE, WIDTH / 2, HEIGHT / 4)
+        self.draw_text("Score: " + str(self.score), 22, WHITE, WIDTH / 2, HEIGHT / 2)
+        self.draw_text("Press a key to play", 22, WHITE, WIDTH / 2, HEIGHT * 3 / 4)
+        pg.display.flip()
+        self.wait_for_key()
     
+    def wait_for_key(self):
+        waiting = True
+        while waiting:
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.running = False
+                if event.type == pg.KEYUP:
+                    waiting = False
 g = Game()
 g.show_start_screen()
 while g.running:
