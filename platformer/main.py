@@ -45,6 +45,20 @@ class Game:
             if hits:
                 self.player.pos.y = hits[0].rect.top + 1
                 self.player.vel.y = 0
+        # If player reaches top 1/4 of screen
+        if self.player.rect.top <= HEIGHT / 4:
+            self.player.pos.y += abs(self.player.vel.y)
+            for plat in self.platforms:
+                plat.rect.y += abs(self.player.vel.y)
+                if plat.rect.top >= HEIGHT:
+                    plat.kill()
+        
+        # Need to spawn new platforms to replenish the ones we've killed
+        while len(self.platforms) < 7:
+            width = random.randrange(40, 100)
+            p = Platform(random.randrange(0, WIDTH - width), random.randrange(-75, -30), width, 20)
+            self.all_sprites.add(p)
+            self.platforms.add(p)
 
     def events(self):
         for event in pg.event.get():
