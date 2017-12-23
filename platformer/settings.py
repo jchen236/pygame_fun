@@ -5,6 +5,7 @@ HEIGHT = 600
 FPS = 60
 FONT_NAME = 'arial'
 HS_FILE = "highscore.txt"
+SPRITESHEET = "spritesheet_jumper.png"
 
 # Player props
 PLAYER_ACC = 1.3

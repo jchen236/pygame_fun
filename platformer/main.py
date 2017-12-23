@@ -26,6 +26,9 @@ class Game:
             except:
                 print("reset!!")
                 self.highscore = 0
+        img_dir = path.join(self.dir, 'img')
+        self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+        
             
     
     def new(self):
