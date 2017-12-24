@@ -9,7 +9,7 @@ SPRITESHEET = "spritesheet_jumper.png"
 
 # Player props
 PLAYER_ACC = 1.3
-PLAYER_FRICTION = -0.12
+PLAYER_FRICTION = -0.15
 PLAYER_GRAV = 1.4
 PLAYER_JUMP = 25
 
