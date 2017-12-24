@@ -28,7 +28,7 @@ class Game:
                 self.highscore = 0
         img_dir = path.join(self.dir, 'img')
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
-        
+
             
     
     def new(self):
@@ -61,7 +61,7 @@ class Game:
         if self.player.vel.y > 0: 
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
-                self.player.pos.y = hits[0].rect.top + 1
+                self.player.pos.y = hits[0].rect.top
                 self.player.vel.y = 0
         # If player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT / 4:

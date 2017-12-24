@@ -9,9 +9,9 @@ SPRITESHEET = "spritesheet_jumper.png"
 
 # Player props
 PLAYER_ACC = 1.3
-PLAYER_FRICTION = -0.09
-PLAYER_GRAV = 0.8
-PLAYER_JUMP = 20
+PLAYER_FRICTION = -0.12
+PLAYER_GRAV = 1.4
+PLAYER_JUMP = 25
 
 # Starting platforms
 PLATFORM_LIST= [(0, HEIGHT - 40, WIDTH, 40),
