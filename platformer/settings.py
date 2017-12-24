@@ -2,7 +2,7 @@
 TITLE = "Jumpy"
 WIDTH = 480
 HEIGHT = 600
-FPS = 60
+FPS = 30
 FONT_NAME = 'arial'
 HS_FILE = "highscore.txt"
 SPRITESHEET = "spritesheet_jumper.png"
@@ -11,7 +11,7 @@ SPRITESHEET = "spritesheet_jumper.png"
 PLAYER_ACC = 1.3 
 PLAYER_FRICTION = -0.15
 PLAYER_GRAV = 1.4
-PLAYER_JUMP = 25
+PLAYER_JUMP = 30
 
 # Starting platforms
 PLATFORM_LIST= [(0, HEIGHT - 60),

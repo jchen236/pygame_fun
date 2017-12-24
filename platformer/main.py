@@ -1,4 +1,7 @@
 # Jumping Platform Game
+# Start Screen Music: Good Mood Theme (8-bit) by https://twitter.com/wyver9
+# In Game Music: Happy Tune by syncopika via https://opengameart.org/users/syncopika
+# Art from Kenney.nl 
 import pygame as pg
 import random
 from settings import *
@@ -28,6 +31,9 @@ class Game:
                 self.highscore = 0
         img_dir = path.join(self.dir, 'img')
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+        # Load sounds
+        self.snd_dir = path.join(self.dir, 'snd')
+        self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump10.wav'))
 
             
     
@@ -42,16 +48,19 @@ class Game:
            p = Platform(self, *platform)
            self.all_sprites.add(p)
            self.platforms.add(p)
+        pg.mixer.music.load(path.join(self.snd_dir, 'happytune.ogg'))
         self.run()
 
     def run(self):
         # Game Loop
+        pg.mixer.music.play(loops=-1)
         self.playing = True
         while self.playing:
             self.clock.tick(FPS)
             self.events()
             self.update()
             self.draw()
+        pg.mixer.music.fadeout(500)
             
 
     def update(self):
@@ -61,14 +70,22 @@ class Game:
         if self.player.vel.y > 0: 
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
+                print(str(len(hits)))
                 lowest = hits[0]
                 for hit in hits:
                     if hit.rect.bottom > lowest.rect.bottom:
                         lowest =  hit
+                print('pos.y = ' + str(self.player.pos.y))
+                print('centery = ' + str(lowest.rect.centery))
                 if self.player.pos.y < lowest.rect.centery:
-                    self.player.pos.y = hits[0].rect.top
                     self.player.vel.y = 0
+                    self.player.pos.y = lowest.rect.top
                     self.player.jumping = False
+                    print("saved")
+                else:
+                    print("fuck")
+                
+
         # If player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT / 4:
             self.player.pos.y += max(abs(self.player.vel.y), 2)
@@ -121,6 +138,8 @@ class Game:
         self.screen.blit(text_surface, text_rect)
 
     def show_start_screen(self):
+        pg.mixer.music.load(path.join(self.snd_dir, 'main_theme_01.wav'))
+        pg.mixer.music.play(loops=-1)
         self.screen.fill(BGCOLOR)
         self.draw_text(TITLE, 48, WHITE, WIDTH / 2, HEIGHT / 4)
         self.draw_text("Arrows to move and space to jump", 22, WHITE, WIDTH / 2, HEIGHT / 2)
@@ -128,6 +147,7 @@ class Game:
         self.draw_text("High Score: " + str(self.highscore), 22, WHITE, WIDTH / 2, 15)
         pg.display.flip()
         self.wait_for_key()
+        pg.mixer.music.fadeout(500)
 
     def show_game_over_screen(self):
         if not self.running:

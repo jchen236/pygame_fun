@@ -54,6 +54,7 @@ class Player(pg.sprite.Sprite):
         self.rect.y -= 2
         if hits and not self.jumping:
             self.jumping = True
+            self.game.jump_sound.play()
             self.vel.y = -PLAYER_JUMP
 
     def jump_cut(self):
@@ -79,7 +80,7 @@ class Player(pg.sprite.Sprite):
         self.pos += self.vel + 0.5 * self.acc
         # wrap around side of screen
         if self.pos.x > WIDTH + self.rect.width / 2:
-            self.pos.x = 0 - self.rect.width / 2
+            self.pos.x = -self.rect.width / 2
         if self.pos.x < -self.rect.width / 2:
             self.pos.x = WIDTH + self.rect.width / 2
         self.rect.midbottom = self.pos
