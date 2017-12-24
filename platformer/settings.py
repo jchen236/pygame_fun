@@ -14,7 +14,7 @@ PLAYER_GRAV = 1.4
 PLAYER_JUMP = 25
 
 # Starting platforms
-PLATFORM_LIST= [(0, HEIGHT - 40),
+PLATFORM_LIST= [(0, HEIGHT - 60),
                 (WIDTH/2 - 50, HEIGHT * 3 / 4),
                 (125, HEIGHT - 350),
                 (250, 200),

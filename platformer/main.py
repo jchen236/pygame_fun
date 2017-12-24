@@ -65,9 +65,9 @@ class Game:
                 self.player.vel.y = 0
         # If player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT / 4:
-            self.player.pos.y += abs(self.player.vel.y)
+            self.player.pos.y += max(abs(self.player.vel.y), 2)
             for plat in self.platforms:
-                plat.rect.y += abs(self.player.vel.y)
+                plat.rect.y += max(abs(self.player.vel.y), 2)
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 1
@@ -100,6 +100,7 @@ class Game:
     def draw(self):
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
+        self.screen.blit(self.player.image, self.player.rect)
         self.draw_text(str(self.score), 22, WHITE, WIDTH / 2, 15)
         pg.display.flip()
     
