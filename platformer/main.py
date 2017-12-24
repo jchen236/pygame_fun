@@ -81,9 +81,6 @@ class Game:
                     self.player.vel.y = 0
                     self.player.pos.y = lowest.rect.top
                     self.player.jumping = False
-                    print("saved")
-                else:
-                    print("fuck")
                 
 
         # If player reaches top 1/4 of screen
