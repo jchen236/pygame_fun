@@ -39,7 +39,7 @@ class Game:
         self.player = Player(self)
         self.all_sprites.add(self.player)
         for platform in PLATFORM_LIST:
-           p = Platform(*platform)
+           p = Platform(self, *platform)
            self.all_sprites.add(p)
            self.platforms.add(p)
         self.run()
@@ -83,7 +83,7 @@ class Game:
         # Need to spawn new platforms to replenish the ones we've killed
         while len(self.platforms) < 7:
             width = random.randrange(40, 100)
-            p = Platform(random.randrange(0, WIDTH - width), random.randrange(-75, -30), width, 20)
+            p = Platform(self, random.randrange(0, WIDTH - width), random.randrange(-75, -30))
             self.all_sprites.add(p)
             self.platforms.add(p)
 
