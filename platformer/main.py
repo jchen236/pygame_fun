@@ -40,12 +40,14 @@ class Game:
     def new(self):
         # Start a new game
         self.score = 0
-        self.all_sprites = pg.sprite.Group()
+        self.all_sprites = pg.sprite.LayeredUpdates()
         self.platforms = pg.sprite.Group()
         self.powerups = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
         self.player = Player(self)
         for platform in PLATFORM_LIST:
            Platform(self, *platform)
+        self.mob_timer = 0
         pg.mixer.music.load(path.join(self.snd_dir, 'happytune.ogg'))
         self.run()
 
@@ -64,6 +66,13 @@ class Game:
     def update(self):
         # Game Loop - Update
         self.all_sprites.update()
+
+        # Spawn a mob?
+        now = pg.time.get_ticks()
+        if now - self.mob_timer > MOB_FREQ + random.choice([-1000, -500, 0, 500, 1000]):
+            self.mob_timer = now
+            Mob(self)
+
         # Check if player hits a platform - only if falling
         if self.player.vel.y > 0: 
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
@@ -88,6 +97,8 @@ class Game:
                 if plat.rect.top >= HEIGHT:
                     plat.kill()
                     self.score += 1
+            for mob in self.mobs:
+                mob.rect.y += max(abs(self.player.vel.y), 2)
         
         # If player hits powerup
         hits = pg.sprite.spritecollide(self.player, self.powerups, True)
@@ -127,7 +138,6 @@ class Game:
     def draw(self):
         self.screen.fill(BGCOLOR)
         self.all_sprites.draw(self.screen)
-        self.screen.blit(self.player.image, self.player.rect)
         self.draw_text(str(self.score), 22, WHITE, WIDTH / 2, 15)
         pg.display.flip()
     

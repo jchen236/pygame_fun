@@ -19,6 +19,7 @@ class Spritesheet:
 class Player(pg.sprite.Sprite):
 
     def __init__(self, game):
+        self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -112,6 +113,7 @@ class Player(pg.sprite.Sprite):
     
 class Platform(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = PLATFORM_LAYER
         self.groups = game.all_sprites, game.platforms
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -127,6 +129,7 @@ class Platform(pg.sprite.Sprite):
 
 class Pow(pg.sprite.Sprite):
     def __init__(self, game, plat):
+        self._layer = POW_LAYER
         self.groups = game.all_sprites, game.powerups
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -144,7 +147,8 @@ class Pow(pg.sprite.Sprite):
             self.kill()
 
 class Mob(pg.sprite.Sprite):
-    def __init__(self, game, plat):
+    def __init__(self, game):
+        self._layer = MOB_LAYER
         self.groups = game.all_sprites, game.mobs
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
