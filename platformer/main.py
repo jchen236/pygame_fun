@@ -28,8 +28,15 @@ class Game:
                 self.highscore = int(f.read())
             except:
                 self.highscore = 0
+        # Load spritesheet images
         img_dir = path.join(self.dir, 'img')
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
+
+        # Load clouds
+        self.cloud_images= []
+        for i in range(1, 4):
+            self.cloud_images.append(pg.image.load(path.join(img_dir, 'cloud{}.png'.format(i))).convert())
+
         # Load sounds
         self.snd_dir = path.join(self.dir, 'snd')
         self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump10.wav'))
@@ -44,11 +51,16 @@ class Game:
         self.platforms = pg.sprite.Group()
         self.powerups = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
+        self.clouds = pg.sprite.Group()
         self.player = Player(self)
         for platform in PLATFORM_LIST:
            Platform(self, *platform)
         self.mob_timer = 0
+        for i in range(8):
+            c = Cloud(self)
+            c.rect.y += 500
         pg.mixer.music.load(path.join(self.snd_dir, 'happytune.ogg'))
+
         self.run()
 
     def run(self):
@@ -96,7 +108,11 @@ class Game:
 
         # If player reaches top 1/4 of screen
         if self.player.rect.top <= HEIGHT / 4:
+            if random.randrange(100) < 15:
+                Cloud(self)
             self.player.pos.y += max(abs(self.player.vel.y), 2)
+            for cloud in self.clouds:
+                cloud.rect.y += max(abs(self.player.vel.y / 2), 2)
             for plat in self.platforms:
                 plat.rect.y += max(abs(self.player.vel.y), 2)
                 if plat.rect.top >= HEIGHT:

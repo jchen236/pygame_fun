@@ -2,25 +2,25 @@
 TITLE = "Jumpy"
 WIDTH = 480
 HEIGHT = 600
-FPS = 30
+FPS = 90
 FONT_NAME = 'arial'
 HS_FILE = "highscore.txt"
 SPRITESHEET = "spritesheet_jumper.png"
 
 # Player properties
-PLAYER_ACC = 1.3 
-PLAYER_FRICTION = -0.15
-PLAYER_GRAV = 1.4
-PLAYER_JUMP = 30
-
+PLAYER_ACC = 0.5
+PLAYER_FRICTION = -0.12
+PLAYER_GRAV = 0.8
+PLAYER_JUMP = 20
 # Game properties
 BOOST_POWER = 60
 POW_SPAWN_PCT = 7
-MOB_FREQ = 5000
+MOB_FREQ = 5000 
 PLAYER_LAYER = 2
 PLATFORM_LAYER = 1
 POW_LAYER = 1
 MOB_LAYER = 2
+CLOUD_LAYER = 0
 
 # Starting platforms
 PLATFORM_LIST= [(0, HEIGHT - 60),
