@@ -7,11 +7,15 @@ FONT_NAME = 'arial'
 HS_FILE = "highscore.txt"
 SPRITESHEET = "spritesheet_jumper.png"
 
-# Player props
+# Player properties
 PLAYER_ACC = 1.3 
 PLAYER_FRICTION = -0.15
 PLAYER_GRAV = 1.4
 PLAYER_JUMP = 30
+
+# Game properties
+BOOST_POWER = 60
+POW_SPAWN_PCT = 7
 
 # Starting platforms
 PLATFORM_LIST= [(0, HEIGHT - 60),

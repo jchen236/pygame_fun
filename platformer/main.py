@@ -27,7 +27,6 @@ class Game:
             try:
                 self.highscore = int(f.read())
             except:
-                print("reset!!")
                 self.highscore = 0
         img_dir = path.join(self.dir, 'img')
         self.spritesheet = Spritesheet(path.join(img_dir, SPRITESHEET))
@@ -42,12 +41,10 @@ class Game:
         self.score = 0
         self.all_sprites = pg.sprite.Group()
         self.platforms = pg.sprite.Group()
+        self.powerups = pg.sprite.Group()
         self.player = Player(self)
-        self.all_sprites.add(self.player)
         for platform in PLATFORM_LIST:
-           p = Platform(self, *platform)
-           self.all_sprites.add(p)
-           self.platforms.add(p)
+           Platform(self, *platform)
         pg.mixer.music.load(path.join(self.snd_dir, 'happytune.ogg'))
         self.run()
 
@@ -70,17 +67,16 @@ class Game:
         if self.player.vel.y > 0: 
             hits = pg.sprite.spritecollide(self.player, self.platforms, False)
             if hits:
-                print(str(len(hits)))
                 lowest = hits[0]
                 for hit in hits:
                     if hit.rect.bottom > lowest.rect.bottom:
                         lowest =  hit
-                print('pos.y = ' + str(self.player.pos.y))
-                print('centery = ' + str(lowest.rect.centery))
-                if self.player.pos.y < lowest.rect.centery:
-                    self.player.vel.y = 0
-                    self.player.pos.y = lowest.rect.top
-                    self.player.jumping = False
+                if self.player.pos.x < lowest.rect.right + 10 and \
+                self.player.pos.x > lowest.rect.left - 10 :
+                    if self.player.pos.y < lowest.rect.centery:
+                        self.player.vel.y = 0
+                        self.player.pos.y = lowest.rect.top
+                        self.player.jumping = False
                 
 
         # If player reaches top 1/4 of screen
@@ -103,9 +99,7 @@ class Game:
         # Need to spawn new platforms to replenish the ones we've killed
         while len(self.platforms) < 7:
             width = random.randrange(40, 100)
-            p = Platform(self, random.randrange(0, WIDTH - width), random.randrange(-75, -30))
-            self.all_sprites.add(p)
-            self.platforms.add(p)
+            Platform(self, random.randrange(0, WIDTH - width), random.randrange(-75, -30))
 
     def events(self):
         for event in pg.event.get():
