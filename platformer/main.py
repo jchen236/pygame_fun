@@ -33,6 +33,7 @@ class Game:
         # Load sounds
         self.snd_dir = path.join(self.dir, 'snd')
         self.jump_sound = pg.mixer.Sound(path.join(self.snd_dir, 'Jump10.wav'))
+        self.boost_sound = pg.mixer.Sound(path.join(self.snd_dir, 'boost.wav'))
 
             
     
@@ -88,6 +89,15 @@ class Game:
                     plat.kill()
                     self.score += 1
         
+        # If player hits powerup
+        hits = pg.sprite.spritecollide(self.player, self.powerups, True)
+        for pow in hits:
+            if pow.type == 'boost':
+                self.boost_sound.play()
+                self.player.vel.y = -BOOST_POWER
+                self.player.jumping = False
+
+
         # Die
         if self.player.rect.bottom > HEIGHT:
             for sprite in self.all_sprites:

@@ -123,7 +123,6 @@ class Platform(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         if randrange(100) < POW_SPAWN_PCT:
-            print('helo')
             Pow(self.game, self)
 
 class Pow(pg.sprite.Sprite):
