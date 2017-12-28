@@ -1,6 +1,7 @@
 import pygame as pg
 from tilemap import collide_hit_rect
 from settings import *
+from random import uniform
 vec = pg.math.Vector2
 
 def collide_with_walls(sprite, group, dir):
@@ -54,8 +55,10 @@ class Player(pg.sprite.Sprite):
             now = pg.time.get_ticks()
             if now - self.last_shot > BULLET_RATE:
                 self.last_shot = now
+                pos = self.pos + BARREL_OFFSET.rotate(-self.rot)
                 dir = vec(1, 0).rotate(-self.rot)
-                Bullet(self.game, self.pos, dir)
+                Bullet(self.game, pos, dir)
+                self.vel = vec(-KICKBACK, 0).rotate(-self.rot)
 
 
     def update(self):
@@ -121,12 +124,17 @@ class Bullet(pg.sprite.Sprite):
         self.game = game
         self.image = game.bullet_img
         self.rect = self.image.get_rect()
+        self.rect.center = pos
         self.pos = vec(pos)
-        self.vel = dir * BULLET_SPEED
+        spread = uniform(-GUN_SPREAD, GUN_SPREAD)
+        self.vel = dir.rotate(spread) * BULLET_SPEED
         self.spawn_time = pg.time.get_ticks()
     
     def update(self):
         self.pos += self.vel * self.game.dt
         self.rect.center = self.pos
+        if pg.sprite.spritecollideany(self, self.game.walls):
+            self.kill()
+             
         if pg.time.get_ticks() - self.spawn_time > BULLET_LIFETIME:
             self.kill()
